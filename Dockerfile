@@ -63,7 +63,15 @@ EXPOSE 3000
 
 # 8. Entrypoint
 # Menggunakan dumb-init untuk menangani PID 1
-ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+# ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 # Command default: Menjalankan daemon
-CMD ["openclaw", "daemon"]
+# CMD ["openclaw", "daemon"]
+
+# 8. Entrypoint (Tetap gunakan dumb-init)
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+
+# GANTI BAGIAN INI:
+# Jangan langsung jalankan "openclaw daemon" karena akan crash kalau belum ada config.
+# Kita pakai perintah "tail -f /dev/null" untuk memaksa container tetap hidup selamanya.
+CMD ["tail", "-f", "/dev/null"]
