@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     dumb-init \
     procps \
+    nano \
     ca-certificates \
     libnss3 \
     libatk-bridge2.0-0 \
