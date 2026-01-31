@@ -59,7 +59,7 @@ RUN mkdir -p /home/openclaw/.openclaw
 
 # 7. Expose Port
 # Port default dashboard/webhook OpenClaw biasanya 3000
-EXPOSE 3000
+EXPOSE 18789
 
 # 8. Entrypoint
 # Menggunakan dumb-init untuk menangani PID 1
