@@ -2,7 +2,7 @@
 FROM node:22-bookworm-slim
 
 # Metadata
-LABEL maintainer="Chairul Anam <ceo@acodemy.id>"
+LABEL maintainer="Chairul Anam <anam@acodemy.id>"
 LABEL description="OpenClaw Isolated Container"
 
 # 1. Install System Dependencies
