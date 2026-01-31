@@ -74,6 +74,6 @@ ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 # GANTI BAGIAN INI:
 # Jangan langsung jalankan "openclaw daemon" karena akan crash kalau belum ada config.
 # Kita pakai perintah "tail -f /dev/null" untuk memaksa container tetap hidup selamanya.
-# CMD ["tail", "-f", "/dev/null"]
+CMD ["tail", "-f", "/dev/null"]
 
-CMD ["openclaw", "daemon"]
+# CMD ["openclaw", "daemon"]
