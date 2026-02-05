@@ -3,7 +3,7 @@ FROM node:22-bookworm-slim
 
 # Metadata
 LABEL maintainer="Chairul Anam <anam@acodemy.id>"
-LABEL description="OpenClaw Isolated Container"
+LABEL description="OpenClaw Isolated Container (Custom Fork)"
 
 # 1. Install System Dependencies
 # Chromium: Agar bot tidak perlu download chrome sendiri (hemat RAM/Storage)
@@ -39,10 +39,17 @@ ENV NODE_ENV=production
 # Config Puppeteer agar pakai Chromium sistem
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
-# Config Install Script (Silent Mode / Non-Interactive)
+
+# --- KONFIGURASI INSTALLER ---
+# Silent Mode / Non-Interactive
 ENV OPENCLAW_NO_ONBOARD=1
 ENV OPENCLAW_NO_PROMPT=1
+
+# ⚠️ PERHATIAN: Pastikan script install.sh di repo Anda mendukung metode ini.
+# Jika Anda ingin install source code fork, biasanya metode 'npm' akan menarik dari registry publik (bukan fork).
+# Jika script Anda sudah dimodif untuk pull dari git, variabel ini mungkin diabaikan atau perlu disesuaikan.
 ENV OPENCLAW_INSTALL_METHOD=npm
+
 # Path agar binary bisa dipanggil global
 ENV PATH="/home/openclaw/.npm-global/bin:${PATH}"
 
@@ -50,34 +57,20 @@ ENV PATH="/home/openclaw/.npm-global/bin:${PATH}"
 USER openclaw
 WORKDIR /home/openclaw
 
-# 5. Jalankan Install Script Resmi (via Pipe)
-# Script ini akan menginstall OpenClaw ke folder user
-RUN curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash
+# 5. Jalankan Install Script Custom (Fork)
+# Menggunakan URL raw dari repo Acodemy-id
+RUN curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/Acodemy-id/openclaw/refs/heads/main/install.sh | bash
 
 # 6. Buat Folder Config untuk Persistensi
-# Folder ini nanti akan kita mount ke Volume Dokploy
 RUN mkdir -p /home/openclaw/.openclaw
 
 # 7. Expose Port
-# Port default dashboard/webhook OpenClaw biasanya 3000
+# Port Gateway OpenClaw
 EXPOSE 18789
-
-# 8. Entrypoint
-# Menggunakan dumb-init untuk menangani PID 1
-# ENTRYPOINT ["/usr/bin/dumb-init", "--"]
-
-# Command default: Menjalankan daemon
-# CMD ["openclaw", "daemon"]
 
 # 8. Entrypoint (Tetap gunakan dumb-init)
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
-# GANTI BAGIAN INI:
-# Jangan langsung jalankan "openclaw daemon" karena akan crash kalau belum ada config.
-# Kita pakai perintah "tail -f /dev/null" untuk memaksa container tetap hidup selamanya.
-# CMD ["tail", "-f", "/dev/null"]
-
-# CMD ["openclaw", "daemon"]
-
-#CMD ["openclaw", "gateway", "run", "--bind", "auto", "--port", "18789"]
+# 9. Command Final
+# Menjalankan gateway secara langsung
 CMD ["openclaw", "gateway", "run", "--bind", "lan", "--port", "18789"]
