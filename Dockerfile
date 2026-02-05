@@ -73,6 +73,6 @@ ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 # 9. Command Final
 # Menjalankan gateway secara langsung
-CMD ["tail", "-f", "/dev/null"]
+# CMD ["tail", "-f", "/dev/null"]
 
-#CMD ["openclaw", "gateway", "run", "--bind", "lan", "--port", "18789"]
+CMD ["openclaw", "gateway", "run", "--bind", "lan", "--port", "18789"]
